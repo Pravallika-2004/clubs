@@ -1,0 +1,133 @@
+﻿
+@model List<WebApplication4.Models.DEPARTMENT>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Manage Departments (Schools)";
+}
+
+<h2 class="text-center mb-4">Manage Departments (Schools)</h2>
+
+<!-- ✅ Display Success & Error Messages -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Success!</strong> @TempData["SuccessMessage"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> @TempData["ErrorMessage"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<!-- ✅ Departments Table -->
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>University Name</th>
+            <th>Department Name</th>
+            <th>HOD</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var department in Model)
+        {
+            <tr>
+                <td>@department.UNIVERSITY.UniversityNAME</td> <!-- Display University Name -->
+                <td>@department.DepartmentName</td>
+                <td>@department.HOD</td>
+                <td>
+                    @if (department.IsActive == true)
+                    {
+                        <span class="badge badge-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger">Deactivated</span>
+                    }
+                </td>
+                <td>
+                    @if (department.IsActive == true)
+                    {
+                        <!-- ✅ Deactivate Button -->
+                        <form method="post" action="@Url.Action("DeactivateDepartment", "Admin")">
+                            <input type="hidden" name="departmentId" value="@department.DepartmentID" />
+                            <button type="submit" class="btn btn-warning btn-sm"
+                                    onclick="return confirm('Are you sure you want to deactivate this department?');">
+                                <i class="fas fa-ban"></i> Deactivate
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <!-- ✅ Activate Button -->
+                        <form method="post" action="@Url.Action("ActivateDepartment", "Admin")">
+                            <input type="hidden" name="departmentId" value="@department.DepartmentID" />
+                            <button type="submit" class="btn btn-success btn-sm"
+                                    onclick="return confirm('Are you sure you want to activate this department?');">
+                                <i class="fas fa-check-circle"></i> Activate
+                            </button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- ✅ CSS Styling for Table -->
+<style>
+    .table {
+        width: 100%;
+        background-color: #fff;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+        .table th {
+            text-align: center;
+            background-color: #343a40;
+            color: white;
+            padding: 12px;
+        }
+
+        .table td {
+            text-align: center;
+            padding: 10px;
+        }
+
+    .btn-warning {
+        background-color: #f39c12;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 5px;
+    }
+
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 5px;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+</style>
